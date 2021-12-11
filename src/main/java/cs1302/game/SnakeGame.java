@@ -3,7 +3,7 @@ package cs1302.game;
 import java.util.Random;
 import java.util.logging.Level;
 import javafx.scene.image.ImageView;
-
+import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
@@ -20,8 +20,9 @@ public class SnakeGame extends Game {
     int score;
     boolean gameOver;
     String direction;
-    int width; //width of the playable board
-    int height; //height of the playable board
+    public int width; //width of the playable board
+    public int height; //height of the playable board
+    Group group;
 
 
 //    private Rectangle player; // some rectangle to represent the player
@@ -35,9 +36,10 @@ public class SnakeGame extends Game {
     public SnakeGame(int width, int height) {
         super(width, height, 60);            // call parent constructor
         setLogLevel(Level.INFO);             // enable logging
+        Group root = new Group();
         this.apple = new Apple(this);
         System.out.println("apple image: " + apple.getImage());
-        System.out.println("is there an error w image:" + apple.getImage().getException());
+//        System.out.println("is there an error w image:" + apple.getImage().getException());
 //        this.snake = new Snake();
         this.gameOver = false;
         this.direction = "N";
