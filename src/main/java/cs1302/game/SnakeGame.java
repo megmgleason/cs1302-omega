@@ -15,7 +15,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class SnakeGame extends Game {
 
-    ImageView apple;
+    Apple apple;
 //    Snake snake;
     int score;
     boolean gameOver;
@@ -35,7 +35,7 @@ public class SnakeGame extends Game {
     public SnakeGame(int width, int height) {
         super(width, height, 60);            // call parent constructor
         setLogLevel(Level.INFO);             // enable logging
-        this.apple = new ImageView("file:resources/apple.png");
+        this.apple = new Apple(this);
         System.out.println("apple image: " + apple.getImage());
         System.out.println("is there an error w image:" + apple.getImage().getException());
 //        this.snake = new Snake();
