@@ -17,13 +17,13 @@ import javafx.stage.Stage;
  * crashes into itself, the game is over and the user loses. If the user eats 252 apples,
  * the game is over and they win.
  */
-public class OmegaSnakeApp extends Application {
+public class OmegaApp extends Application {
 
     /**
-     * Constructs an {@code OmegaSnakeApp} object. This default (i.e., no argument)
+     * Constructs an {@code OmegaApp} object. This default (i.e., no argument)
      * constructor is executed in Step 2 of the JavaFX Application Life-Cycle.
      */
-    public OmegaSnakeApp() {}
+    public OmegaApp() {}
 
     /** {@inheritDoc} */
     @Override
@@ -48,7 +48,7 @@ public class OmegaSnakeApp extends Application {
         Scene scene = new Scene(root);
 
         // setup stage
-        stage.setTitle("OmegaSnakeApp!");
+        stage.setTitle("OmegaApp!");
         stage.setScene(scene);
         stage.setOnCloseRequest(event -> Platform.exit());
         stage.sizeToScene();
@@ -59,4 +59,4 @@ public class OmegaSnakeApp extends Application {
 
     } // start
 
-} // OmegaSnakeApp
+} // OmegaApp

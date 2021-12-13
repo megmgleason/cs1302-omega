@@ -1,9 +1,11 @@
 package cs1302.game;
 
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.Event;
@@ -31,6 +33,12 @@ import javafx.util.Duration;
 public abstract class Game extends Region {
 
     protected final Logger logger = Logger.getLogger("cs1302.game.Game");
+    public ArrayList <Rectangle> s = new ArrayList<>(1);
+    public int lastSeenTailX, lastSeenTailY;
+    public int headX;
+    public int headY;
+    public static int width = 24, height = 24;
+    public static int size = 25;
 
     private final Bounds bounds;                     // game bounds
     private final Duration fpsTarget;                // target duration for game loop
@@ -51,6 +59,18 @@ public abstract class Game extends Region {
         setMinHeight(height);
         this.bounds = new BoundingBox(0, 0, width, height);
         this.fpsTarget = Duration.millis(1000.0 / fps);
+
+        this.headX = (int) (Math.random() *( this.width - 1)) + 2;
+        this.headY = (int) (Math.random() * (this.height - 4)) + 2;
+
+        s.add(new Rectangle(headX * size, headY * size, size - 1, size - 1));
+        s.add(new Rectangle(headX * size, (headY + 1) * size, size - 1, size - 1));
+        s.add(new Rectangle(headX * size, (headY + 2) * size, size - 1, size - 1));
+
+
+
+
+
         addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyPressed(event));
         addEventFilter(KeyEvent.KEY_RELEASED, event -> handleKeyReleased(event));
         initGameLoop();

@@ -2,6 +2,7 @@ package cs1302.omega;
 
 import javafx.application.Application;
 
+
 /**
  * Driver for the {@code OmegaSnakeApp} class.
  */
@@ -13,7 +14,7 @@ public class OmegaDriver {
      */
     public static void main(String[] args) {
         try {
-            Application.launch(OmegaSnakeApp.class, args);
+            Application.launch(OmegaApp.class, args);
         } catch (UnsupportedOperationException e) {
             e.printStackTrace();
             System.err.println();

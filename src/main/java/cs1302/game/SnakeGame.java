@@ -1,7 +1,11 @@
 package cs1302.game;
 
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Shape;
 import java.util.Random;
 import java.util.logging.Level;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.image.ImageView;
 import javafx.scene.Group;
 import javafx.scene.input.KeyCode;
@@ -15,6 +19,7 @@ import javafx.scene.shape.Rectangle;
  */
 public class SnakeGame extends Game {
 
+//    public ArrayList <Rectangle> s = new ArrayList<>(1);
     Apple apple;
 //    Snake snake;
     int score;
@@ -36,7 +41,7 @@ public class SnakeGame extends Game {
     public SnakeGame(int width, int height) {
         super(width, height, 60);            // call parent constructor
         setLogLevel(Level.INFO);             // enable logging
-        Group root = new Group();
+
         this.apple = new Apple(this);
         System.out.println("apple image: " + apple.getImage());
 //        System.out.println("is there an error w image:" + apple.getImage().getException());
@@ -45,6 +50,19 @@ public class SnakeGame extends Game {
         this.direction = "N";
         this.width = width;
         this.height = height;
+
+
+//        int headX = (int) (Math.random() * (width - 1)) + 2;
+//        int headY = (int) (Math.random() * (height - 4)) + 2;
+
+//        s.add(new Rectangle(headX * size, headY * size, size - 1, size - 1));
+//        s.add(new Rectangle(headX * size, (headY + 1) * size, size - 1, size - 1));
+//        s.add(new Rectangle(headX * size, (headY + 2) * size, size - 1, size - 1));
+
+        for (Rectangle rect : s) {
+            rect.setFill(Color.RED);
+//            getChildren().add(rect);
+        }
 //        this.player = new Rectangle(20, 20); // some rectangle to represent the player
 //        this.cat  = new Apple(this);       // the not so idle cat (see Apple.java)
     } // SnakeGame
@@ -53,7 +71,10 @@ public class SnakeGame extends Game {
     @Override
     protected void init() {
         // setup subgraph for this component
-        getChildren().add(apple); //delete this, use next line when Snake ready
+        getChildren().add(apple); //delete this, use next line when Snake read
+        for (Rectangle rect : s) {
+            getChildren().add(rect);
+        }
 //        getChildren().addAll(snake, apple);         // add to main container
         // setup player
 //        snake.setX(50);                           // 50px in the x direction (right)
