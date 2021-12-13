@@ -21,20 +21,18 @@ public class SnakeGame extends Game {
 
 //    public ArrayList <Rectangle> s = new ArrayList<>(1);
     Apple apple;
-//    Snake snake;
+
     int score;
+    int moveHoriz; // left/ right ~ N/S , x variable
+    int moveVert; //up and down ~ E/W, y variable
     boolean gameOver;
-    String direction;
+    String currentDirection;
     public int width; //width of the playable board
     public int height; //height of the playable board
     Group group;
 
-
-//    private Rectangle player; // some rectangle to represent the player
-//    private Apple cat;      // the not so idle cat (see Apple.java)
-
     /**
-     * Construct a {@code SnakeGame} object.
+     * Construct na {@code SnakeGame} object.
      * @param width scene width
      * @param height scene height
      */
@@ -47,10 +45,13 @@ public class SnakeGame extends Game {
 //        System.out.println("is there an error w image:" + apple.getImage().getException());
 //        this.snake = new Snake();
         this.gameOver = false;
-        this.direction = "N";
+        this.currentDirection = "N";
+
         this.width = width;
         this.height = height;
 
+        this.moveHoriz = 0;
+        this.moveVert = 1;
 
 //        int headX = (int) (Math.random() * (width - 1)) + 2;
 //        int headY = (int) (Math.random() * (height - 4)) + 2;
@@ -101,11 +102,18 @@ public class SnakeGame extends Game {
         // v              adjusting the x and y positions of child nodes.
 
         // update snake position
-        isKeyPressed (KeyCode.LEFT, () -> updatePosition("W")); //do check for already this directin
-        isKeyPressed (KeyCode.RIGHT, () -> updatePosition("E"));
-        isKeyPressed (KeyCode.DOWN, () -> updatePosition("S"));
-        isKeyPressed (KeyCode.UP, () -> updatePosition("N"));
+        if ( gameOver == false) {
+            isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
+            isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
+            isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
+            isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
+//            isDifferentDirection(this.currentDirection);
+        }
 
+        if (isAppleEaten()) {
+            score++;
+        }
+//        updatePosition(this.currentDirection);
 
 
 // <--------------------------------------------------------------------
@@ -118,7 +126,7 @@ public class SnakeGame extends Game {
     } // update
 
 
-    //dont need this method, maybe refactor for the start button
+//dont need this method, maybe refactor for the start button
 /**
  * Move the snake rectangle to a random position.
  * @param event associated mouse event
@@ -130,19 +138,65 @@ public class SnakeGame extends Game {
 //    } // handleClickSnake
 
 /**
- * Getter method for the {@code direction} variable.
+ * Checks if the direction the user is currently set to be moving in is the same direection
+ * the user put in on the keyboard. If its a diferent direction, update the direction and movement
+ * variables, then call the {@code updatePosition} menthod.
  *
- * @return direction
  */
-    public String getDirection () {
-        throw new UnsupportedOperationException("not yet implemented");
-    } //This should be in SNake!
+    public void isDifferentDirection (String userDirection) {
+        if (!(this.currentDirection.equals(userDirection))) {
+            this.currentDirection = userDirection; //switch the iv
+            switch (currentDirection) {
+            case "N": this.moveVert = 1; //y var
+                this.moveHoriz = 0;
+                break;
+            case "S": this.moveVert = -1; //y var down
+                this.moveHoriz = 0;
+                break;
+            case "E": this.moveHoriz = 1; //x var Right
+                this.moveVert = 0;
+                break;
+            case "W": this.moveHoriz = -1; //x var left
+                this.moveVert = 0;
+                break;
+            } //switch
+            updatePosition(this.currentDirection); //now call updatePosition() w proper direction
+        } else {
+            updatePosition(this.currentDirection);
+        }
+    } //getDirection
 
 /**
  * Calls on helper methods to update the position of the {@code Snake} object.
  */
-    public void updatePosition(String currentDirection) {
-        throw new UnsupportedOperationException("not yet implemented");
+    public void updatePosition(String direction) {
+
+        this.lastSeenTailX = (int) s.get(s.size() - 1).getX();
+        this.lastSeenTailY = (int) s.get(s.size() - 1).getY();
+
+        for (int i = s.size() - 1; i >= 1; i--) {
+            s.get(i).setX(s.get(i - 1).getX());
+            System.out.println(s.get(i).getX());
+            s.get(i).setY(s.get(i - 1).getY());
+            System.out.println(s.get(i).getY());
+        }//for
+
+
+        s.get(0).setX(s.get(0).getX() + snakeSize * this.moveHoriz);
+        s.get(0).setY(s.get(0).getY() + snakeSize * this.moveVert);
+
+        if (s.get(0).getX() < 0) {
+            pause(); //x is off the board, deal w game over later
+        }
+        if (s.get(0).getX() >= this.width) { //if its = or greater than width of gameboard
+            pause();
+        }
+        if (s.get(0).getY() < 0) {
+            pause();
+        }
+        if (s.get(0).getY() >= this.height) {
+            pause();
+        }
     } //updatePosition
 
 /**
@@ -153,27 +207,41 @@ public class SnakeGame extends Game {
  * @return true if it is, false otherwise.
  */
     public boolean isAppleEaten() {
-        throw new UnsupportedOperationException("not yet implemented");
+        if (((Math.abs(s.get(0).getX() - apple.getX()) <= 50)) &&
+        (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
+            apple.changeLocation();
+            return true;
+        } else {
+            return false;
+        }
     } //isppleEaten
 
     /**
-     * The game is over, the main game loop will not continue.
-     * Game over is caused by: the snake colliding with itself, the snake hitting
-     * the edge of the playable board, or the snake collection 252 fruits,
-     * the only instance when the player would win the game.
-     * {@code isGameOver} is set to true
+     * Increases the tail of the snake by increasing the arraylist.
      */
+    public void growSnake() {
+        s.add(new Rectangle(lastSeenTailX, lastSeenTailY, this.snakeSize - 1, this.snakeSize - 1));
+        getChildren().add(s.get(s.size() - 1));
+    }
+/**
+ * The game is over, the main game loop will not continue.
+ * Game over is caused by: the snake colliding with itself, the snake hitting
+ * the edge of the playable board, or the snake collection 252 fruits,
+ * the only instance when the player would win the game.
+ * {@code isGameOver} is set to true
+ */
     public void gameOver() {
-        throw new UnsupportedOperationException("not yet implemented");
+        this.gameOver = true;
     } //gameOver
 
-    /**
-     * Checks if where the snake is trying to move to is an edge of the board,
-     * resulting in it being out of bounds and the game being over.
-     *
-     * @return true if the snake is out of bounds, else false.
-     */
+/**
+ * Checks if where the snake is trying to move to is an edge of the board,
+ * resulting in it being out of bounds and the game being over.
+ *
+ * @return true if the snake is out of bounds, else false.
+ */
     public boolean isBoundsCollision() {
         throw new UnsupportedOperationException("not yet implemented");
     } //isBoundsCollision
+
 } // SnakeGame
