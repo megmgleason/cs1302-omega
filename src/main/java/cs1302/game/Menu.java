@@ -37,34 +37,18 @@ public class Menu extends HBox {
 
         textPoints = new Text();
         this.textPoints.setTextAlignment(TextAlignment.CENTER);
-//        textPoints.setFont(Font.font("Lato", FontWeight.BOLD, 40));
-//        textPoints.setFill(Color.BLUE);
-//        textPoints.setStroke(Color.BLACK);
-//        textPoints.setX(getWidth() * size + 50);
-//        textPoints.setY(getHeight() * size / 6);
         textPoints.setText("Points: 0");
 
         textGameOver = new Text("GAME OVER");
-//        textGameOver.setTextAlignment(TextAlignment.CENTER);
         textGameOver.setFill(Color.RED);
-//        textGameOver.setX(game.width / 2.0);
-//        textGameOver.setY(game.height / 2.0);
         textGameOver.setVisible(false);
 
 
         buttonRestart = new Button("RESTART");
         buttonRestart.setVisible(false);
-//        buttonRestart.setPrefWidth(125);
-//        buttonRestart.setPrefHeight(75);
-//        buttonRestart.setLayoutX(getWidth() * size + 65);
-//        buttonRestart.setLayoutY(getHeight() * size / 6 + 175);
 
         buttonExit = new Button("EXIT");
         buttonExit.setVisible(false);
-//        buttonExit.setPrefWidth(125);
-//        buttonExit.setPrefHeight(75);
-//        buttonExit.setLayoutX(getWidth() * size + 65);
-//        buttonExit.setLayoutY(getHeight() * size / 6 + 275);
 
         this.getChildren().addAll(buttonRestart, textPoints, buttonExit);
         this.getChildren().add(textGameOver);
@@ -86,7 +70,7 @@ public class Menu extends HBox {
 
     public void gameOverInfo() {
         VBox gameOverBox = new VBox();
-//        textGameOver.setText(textGameOver + "\n" + points + " points");
+
         textGameOver.setX(game.getWidth() / 2);
         textGameOver.setY(game.getHeight() / 2);
         textGameOver.setVisible(true);

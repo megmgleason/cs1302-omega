@@ -19,6 +19,8 @@ public class Apple extends ImageView {
     Rectangle r;
     private Random rng;       // random number generator
     public static int size = 25;
+    public double appleWidth = 40;
+    public double  appleHeight = 40;
     public static int width = 75, height = 75;
 
     /**
@@ -28,12 +30,12 @@ public class Apple extends ImageView {
      */
     public Apple(Game game) {
         super("file:resources/apple.jpg");
-        this.setFitHeight(height);
-        this.setFitWidth(width);
+        this.setFitHeight(appleHeight);
+        this.setFitWidth(appleWidth);
         this.rng = new Random();             // random number generator
-        this.setY(rng.nextDouble() * (game.getGameBounds().getMaxY() - height));
-        this.setX(rng.nextDouble() * (game.getGameBounds().getMaxX() - width));
-//        this.appleY = setY((Math.random() * (height - 2) + 1));
+        this.setY(rng.nextDouble() * (game.getGameBounds().getMaxY() - appleHeight));
+        this.setX(rng.nextDouble() * (game.getGameBounds().getMaxX() - appleWidth));
+
         System.out.println("Apple log: " + this.getY() + " " + this.getX());
         System.out.println("Game height and width : "
             + game.getGameBounds().getHeight() + " " + game.getGameBounds().getWidth());
@@ -44,13 +46,8 @@ public class Apple extends ImageView {
      * Uses setters to change the location of the apple.
      */
     public void changeLocation() {
-        this.setX((Math.random() * this.game.getGameBounds().getMaxX() - width));
-        this.setY ((Math.random() * this.game.getGameBounds().getMaxY() - height));
-
-
-
-//        this.r.setX(x);
-    //this.r.setY(y);
+        this.setX((Math.random() * (this.game.getGameBounds().getMaxX()  - appleWidth)));
+        this.setY ((Math.random() * (this.game.getGameBounds().getMaxY() - appleHeight )));
     } //changeLocation
 
 //use setters and getters tha ImageView has

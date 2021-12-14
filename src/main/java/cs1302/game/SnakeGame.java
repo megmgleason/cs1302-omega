@@ -69,15 +69,7 @@ public class SnakeGame extends Game {
 
         }
         s.get(0).setFill(Color.RED);
-//        getChildren().addAll(snake, apple);         // add to main container
-        // setup player
-//        snake.setX(50);                           // 50px in the x direction (right)
-//        snake.setY(50);                           // 50ps in the y direction (down)
-//        snake.setOnMouseClicked(event -> handleClickSnake(event));
-        // setup the cat
 
-//        apple.setX(0);
-//        apple.setY(0);
         menu.buttonExit.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -94,21 +86,6 @@ public class SnakeGame extends Game {
                     restartSnake();
                     resetInformation(); //call method w following in it
                     play();
-//                SnakeGame restart = new SnakeGame(width, height);
-//                this.score = 0;
-//                this.apple.moveLocation();
-//                this.s = restart.s;
-//                this.lastSeenTailX = restart.lastSeenTailX;
-//                this.lastSeenTailY = restart.lastSeenTailY;
-//                this.moveHoriz = restart.moveHoriz;
-//                this.moveVert = restart.moveVert;
-//                this.currentDirection = restart.currentDirection;
-//                this.gameOver = false;
-
-
-//                apple.changeLocation();
-//                apple.show();
-//                game.gameOver = false;
                 }
             });
 
@@ -130,15 +107,14 @@ public class SnakeGame extends Game {
 
         // update snake position
 
+        isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
+        isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
+        isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
+        isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
 
-            isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
-            isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
-            isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
-            isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
-         //else {
-//            isDifferentDirection(this.currentDirection);
-//        }
-//        updatePosition(this.currentDirection); //try just adjusting in above, them call to move
+
+
+
 
         if (isAppleEaten()) {
             score++;
@@ -146,7 +122,7 @@ public class SnakeGame extends Game {
             menu.changePoints(this.score);
             growSnake();
         }
-//        updatePosition(this.currentDirection);
+
 
 
 // <--------------------------------------------------------------------
@@ -158,24 +134,11 @@ public class SnakeGame extends Game {
 
     } // update
 
-
-//dont need this method, maybe refactor for the start button
-/**
- * Move the snake rectangle to a random position.
- * @param event associated mouse event
- */
-//    private void handleClickSnake(MouseEvent event) {
-//        logger.info(event.toString());
-//        snake.setX(rng.nextDouble() * (getWidth() - snake.getWidth()));
-//        snake.setY(rng.nextDouble() * (getHeight() - snake.getHeight()));
-//    } // handleClickSnake
-
 /**
  * Checks if the direction the user is currently set to be moving in is the same direection
  * the user put in on the keyboard. If its a diferent direction, update the direction and movement
- * variables, then call the {@code updatePosition} menthod.
- *
- * @param userDirection the current direction the snake is in
+ * variables, then call the {@code updatePosition} menthod. *
+ * @param userDirection  the current direction the snake is in
  */
     public void isDifferentDirection (String userDirection) {
         if (! (this.currentDirection.equals(userDirection))) {
@@ -196,13 +159,12 @@ public class SnakeGame extends Game {
             } //switch
             updatePosition(this.currentDirection); //now call updatePosition() w proper direction
         } else {
-        updatePosition(this.currentDirection);
+            updatePosition(this.currentDirection);
         }
     } //getDirection
 
 /**
- * Calls on helper methods to update the position of the {@code Snake} object.
- *
+ * Calls on helper methods to update the position of the {@code Snake} object.*
  * @param direction the direction the snake is heading.
  */
     public void updatePosition(String direction) {
@@ -234,7 +196,7 @@ public class SnakeGame extends Game {
  */
     public boolean isAppleEaten() {
         if (((Math.abs(s.get(0).getX() - apple.getX()) <= 50)) &&
-        (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
+            (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
             apple.changeLocation();
             return true;
         } else {
