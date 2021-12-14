@@ -56,7 +56,7 @@ public class SnakeGame extends Game {
         this.height = height;
 
         this.moveHoriz = 0;
-        this.moveVert = 1;
+        this.moveVert = 0;
     } // SnakeGame
 
     /** {@inheritDoc} */
@@ -129,13 +129,16 @@ public class SnakeGame extends Game {
         // v              adjusting the x and y positions of child nodes.
 
         // update snake position
-//        if (this.gameOver == false) {
-        isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
-        isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
-        isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
-        isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
+
+
+            isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
+            isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
+            isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
+            isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
+         //else {
 //            isDifferentDirection(this.currentDirection);
 //        }
+//        updatePosition(this.currentDirection); //try just adjusting in above, them call to move
 
         if (isAppleEaten()) {
             score++;
@@ -178,10 +181,10 @@ public class SnakeGame extends Game {
         if (! (this.currentDirection.equals(userDirection))) {
             this.currentDirection = userDirection; //switch the iv
             switch (currentDirection) {
-            case "N": this.moveVert = 1; //y var
+            case "N": this.moveVert = -1; //y var
                 this.moveHoriz = 0;
                 break;
-            case "S": this.moveVert = -1; //y var down
+            case "S": this.moveVert = 1; //y var down
                 this.moveHoriz = 0;
                 break;
             case "E": this.moveHoriz = 1; //x var Right
@@ -193,7 +196,7 @@ public class SnakeGame extends Game {
             } //switch
             updatePosition(this.currentDirection); //now call updatePosition() w proper direction
         } else {
-            updatePosition(this.currentDirection);
+        updatePosition(this.currentDirection);
         }
     } //getDirection
 
