@@ -1,5 +1,10 @@
 package cs1302.game;
 
+import java.util.Iterator;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import java.util.Random;
@@ -22,14 +27,14 @@ public class SnakeGame extends Game {
 //    public ArrayList <Rectangle> s = new ArrayList<>(1);
     Apple apple;
 
-    int score;
-    int moveHoriz; // left/ right ~ N/S , x variable
-    int moveVert; //up and down ~ E/W, y variable
-    boolean gameOver;
-    String currentDirection;
+    public int score;
+    public int moveHoriz; // left/ right ~ N/S , x variable
+    public int moveVert; //up and down ~ E/W, y variable
+    public boolean gameOver;
+    public String currentDirection;
     public int width; //width of the playable board
     public int height; //height of the playable board
-    Group group;
+
 
     /**
      * Construct na {@code SnakeGame} object.
@@ -39,43 +44,31 @@ public class SnakeGame extends Game {
     public SnakeGame(int width, int height) {
         super(width, height, 60);            // call parent constructor
         setLogLevel(Level.INFO);             // enable logging
-
+        this.menu = new Menu (this);
         this.apple = new Apple(this);
         System.out.println("apple image: " + apple.getImage());
 //        System.out.println("is there an error w image:" + apple.getImage().getException());
 //        this.snake = new Snake();
         this.gameOver = false;
-        this.currentDirection = "N";
+        this.currentDirection = "-";
 
         this.width = width;
         this.height = height;
 
         this.moveHoriz = 0;
         this.moveVert = 1;
-
-//        int headX = (int) (Math.random() * (width - 1)) + 2;
-//        int headY = (int) (Math.random() * (height - 4)) + 2;
-
-//        s.add(new Rectangle(headX * size, headY * size, size - 1, size - 1));
-//        s.add(new Rectangle(headX * size, (headY + 1) * size, size - 1, size - 1));
-//        s.add(new Rectangle(headX * size, (headY + 2) * size, size - 1, size - 1));
-
-        for (Rectangle rect : s) {
-            rect.setFill(Color.RED);
-//            getChildren().add(rect);
-        }
-//        this.player = new Rectangle(20, 20); // some rectangle to represent the player
-//        this.cat  = new Apple(this);       // the not so idle cat (see Apple.java)
     } // SnakeGame
 
     /** {@inheritDoc} */
     @Override
     protected void init() {
         // setup subgraph for this component
-        getChildren().add(apple); //delete this, use next line when Snake read
+        getChildren().addAll(menu, apple); //delete this, use next line when Snake read
         for (Rectangle rect : s) {
             getChildren().add(rect);
+
         }
+        s.get(0).setFill(Color.RED);
 //        getChildren().addAll(snake, apple);         // add to main container
         // setup player
 //        snake.setX(50);                           // 50px in the x direction (right)
@@ -85,6 +78,40 @@ public class SnakeGame extends Game {
 
 //        apple.setX(0);
 //        apple.setY(0);
+        menu.buttonExit.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    Stage stage = (Stage) menu.buttonExit.getScene().getWindow();
+
+                    stage.close();
+                }
+            });
+
+        menu.buttonRestart.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    menu.menuRestart();
+                    restartSnake();
+                    resetInformation(); //call method w following in it
+                    play();
+//                SnakeGame restart = new SnakeGame(width, height);
+//                this.score = 0;
+//                this.apple.moveLocation();
+//                this.s = restart.s;
+//                this.lastSeenTailX = restart.lastSeenTailX;
+//                this.lastSeenTailY = restart.lastSeenTailY;
+//                this.moveHoriz = restart.moveHoriz;
+//                this.moveVert = restart.moveVert;
+//                this.currentDirection = restart.currentDirection;
+//                this.gameOver = false;
+
+
+//                apple.changeLocation();
+//                apple.show();
+//                game.gameOver = false;
+                }
+            });
+
     } // init
 
     /** {@inheritDoc} */
@@ -93,7 +120,7 @@ public class SnakeGame extends Game {
 //        snake.moveSnake(direction); must make snake first, its always moving
 //        isAppleEaten();
 //        isBoundsCollison();
-
+//        checkSelfCollision();
         // (x, y)         In computer graphics, coordinates along an x-axis and
         // (0, 0) -x--->  y-axis are used. When compared to the standard
         // |              Cartesian plane that most students are familiar with,
@@ -102,16 +129,19 @@ public class SnakeGame extends Game {
         // v              adjusting the x and y positions of child nodes.
 
         // update snake position
-        if ( gameOver == false) {
-            isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
-            isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
-            isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
-            isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
+//        if (this.gameOver == false) {
+        isKeyPressed (KeyCode.LEFT, () -> isDifferentDirection("W"));
+        isKeyPressed (KeyCode.RIGHT, () -> isDifferentDirection("E"));
+        isKeyPressed (KeyCode.DOWN, () -> isDifferentDirection("S"));
+        isKeyPressed (KeyCode.UP, () -> isDifferentDirection("N"));
 //            isDifferentDirection(this.currentDirection);
-        }
+//        }
 
         if (isAppleEaten()) {
             score++;
+            System.out.println("score: " + score);
+            menu.changePoints(this.score);
+            growSnake();
         }
 //        updatePosition(this.currentDirection);
 
@@ -142,9 +172,10 @@ public class SnakeGame extends Game {
  * the user put in on the keyboard. If its a diferent direction, update the direction and movement
  * variables, then call the {@code updatePosition} menthod.
  *
+ * @param userDirection the current direction the snake is in
  */
     public void isDifferentDirection (String userDirection) {
-        if (!(this.currentDirection.equals(userDirection))) {
+        if (! (this.currentDirection.equals(userDirection))) {
             this.currentDirection = userDirection; //switch the iv
             switch (currentDirection) {
             case "N": this.moveVert = 1; //y var
@@ -168,35 +199,26 @@ public class SnakeGame extends Game {
 
 /**
  * Calls on helper methods to update the position of the {@code Snake} object.
+ *
+ * @param direction the direction the snake is heading.
  */
     public void updatePosition(String direction) {
+        if (!isBoundsCollision()) {
+            this.lastSeenTailX = (int) s.get(s.size() - 1).getX();
+            this.lastSeenTailY = (int) s.get(s.size() - 1).getY();
 
-        this.lastSeenTailX = (int) s.get(s.size() - 1).getX();
-        this.lastSeenTailY = (int) s.get(s.size() - 1).getY();
-
-        for (int i = s.size() - 1; i >= 1; i--) {
-            s.get(i).setX(s.get(i - 1).getX());
-            System.out.println(s.get(i).getX());
-            s.get(i).setY(s.get(i - 1).getY());
-            System.out.println(s.get(i).getY());
-        }//for
+            for (int i = s.size() - 1; i >= 1; i--) {
+                s.get(i).setX(s.get(i - 1).getX());
+                System.out.println(s.get(i).getX());
+                s.get(i).setY(s.get(i - 1).getY());
+                System.out.println(s.get(i).getY());
+            } //for
 
 
-        s.get(0).setX(s.get(0).getX() + snakeSize * this.moveHoriz);
-        s.get(0).setY(s.get(0).getY() + snakeSize * this.moveVert);
+            s.get(0).setX((s.get(0).getX() + snakeSize * this.moveHoriz));
+            s.get(0).setY((s.get(0).getY() + snakeSize * this.moveVert));
+        } //if
 
-        if (s.get(0).getX() < 0) {
-            pause(); //x is off the board, deal w game over later
-        }
-        if (s.get(0).getX() >= this.width) { //if its = or greater than width of gameboard
-            pause();
-        }
-        if (s.get(0).getY() < 0) {
-            pause();
-        }
-        if (s.get(0).getY() >= this.height) {
-            pause();
-        }
     } //updatePosition
 
 /**
@@ -208,7 +230,7 @@ public class SnakeGame extends Game {
  */
     public boolean isAppleEaten() {
         if (((Math.abs(s.get(0).getX() - apple.getX()) <= 50)) &&
-        (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
+            (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
             apple.changeLocation();
             return true;
         } else {
@@ -223,6 +245,7 @@ public class SnakeGame extends Game {
         s.add(new Rectangle(lastSeenTailX, lastSeenTailY, this.snakeSize - 1, this.snakeSize - 1));
         getChildren().add(s.get(s.size() - 1));
     }
+
 /**
  * The game is over, the main game loop will not continue.
  * Game over is caused by: the snake colliding with itself, the snake hitting
@@ -231,7 +254,12 @@ public class SnakeGame extends Game {
  * {@code isGameOver} is set to true
  */
     public void gameOver() {
-        this.gameOver = true;
+        //      this.gameOver = true;
+        menu.gameOverInfo();
+        menu.textGameOver.setVisible(true);
+        pause(); //must prompt user to try again, show gameOver
+
+        System.out.println("GAME OVER - gameOver() method called");
     } //gameOver
 
 /**
@@ -241,7 +269,72 @@ public class SnakeGame extends Game {
  * @return true if the snake is out of bounds, else false.
  */
     public boolean isBoundsCollision() {
-        throw new UnsupportedOperationException("not yet implemented");
+        boolean isCollision = true;
+        if (s.get(0).getX() <= 0 || s.get(0).getX() >= width) {
+            System.out.println("GAME OVER - x boundary hit!");
+            gameOver();
+        } else if (s.get(0).getY() <= 0 || s.get(0).getY() >= height) {
+            System.out.println("GAME OVER - y boundary hit!");
+            gameOver();
+        } else {
+            isCollision = false;
+        }
+        return isCollision;
     } //isBoundsCollision
+
+    /**
+     * Checks if snake runs into itself.
+     */
+    public void checkSelfCollision () {
+        for (int i = 1; i < s.size(); i++) {
+            if (s.get(0).getX() == s.get(i).getX() && s.get(0).getY() == s.get(i).getY()) {
+                System.out.println("collided with self, Game over!");
+                gameOver();
+            }
+        } //for
+    } //checkSelfCollision
+
+    /**
+     * Resets the snake for future plays.
+     */
+    public void restartSnake() {
+        if (s.size() > 3) {
+            for (int i = 3; i < s.size() ; i++ ) {
+                s.get(i).setVisible(false);
+            }
+        }
+
+        int index = 0;
+        for (Iterator<Rectangle> iterator = s.iterator(); iterator.hasNext(); ) {
+            Rectangle block = iterator.next();
+            index++;
+            if (index > 3) {
+                iterator.remove();
+            }
+        }
+
+
+
+        this.headX = 100;
+        this.headY = 100;
+        s.get(0).setX(headX);
+        s.get(0).setY(headY);
+        s.get(1).setX(headX);
+        s.get(1).setY((headY + snakeSize));
+        s.get(2).setX(headX);
+        s.get(2).setY((headY + snakeSize + snakeSize));
+    } //restartSnake
+
+    /**
+     * Resets the information variables relating to the game.
+     */
+    public void resetInformation() {
+        apple.changeLocation();
+        this.score = 0;
+        this.moveHoriz = 0;
+        this.moveVert = 1;
+        this.currentDirection = "N";
+        this.gameOver = false;
+    } //resetInformation
 
 } // SnakeGame

@@ -32,6 +32,7 @@ import javafx.util.Duration;
  */
 public abstract class Game extends Region {
 
+    public Menu menu;
     protected final Logger logger = Logger.getLogger("cs1302.game.Game");
     public ArrayList <Rectangle> s = new ArrayList<>(1);
     public int lastSeenTailX;
@@ -67,10 +68,6 @@ public abstract class Game extends Region {
         s.add(new Rectangle(headX, headY, snakeWidth, snakeHeight));
         s.add(new Rectangle(headX, (headY + snakeSize), snakeWidth, snakeHeight));
         s.add(new Rectangle(headX, (headY + (snakeSize * 2)), snakeWidth, snakeHeight));
-
-
-
-
 
         addEventFilter(KeyEvent.KEY_PRESSED, event -> handleKeyPressed(event));
         addEventFilter(KeyEvent.KEY_RELEASED, event -> handleKeyReleased(event));
@@ -185,5 +182,7 @@ public abstract class Game extends Region {
     public final Bounds getGameBounds() {
         return bounds;
     } // getGameBounds
+
+
 
 } // Game
