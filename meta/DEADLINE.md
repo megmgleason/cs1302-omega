@@ -11,7 +11,9 @@ Markdown is transformed into nice looking HTML.
 > category that you chose, and the primary functions available to users
 > of the app.
 
-TODO WRITE / REPLACE
+I chose the classic arcade Snake. The user is represented by the ArrayList of rectangles, and it tries to eat the randomly generated apple.
+If the user runs into the walls or its own tail, the game is over.
+
 
 ## Part 2: New
 

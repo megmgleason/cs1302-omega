@@ -215,8 +215,9 @@ public class SnakeGame extends Game {
             } //for
 
 
-            s.get(0).setX((s.get(0).getX() + snakeSize * this.moveHoriz));
-            s.get(0).setY((s.get(0).getY() + snakeSize * this.moveVert));
+            s.get(0).setX(s.get(0).getX() + snakeSize * this.moveHoriz);
+            s.get(0).setY(s.get(0).getY() + snakeSize * this.moveVert);
+//            checkSelfCollision();
         } //if
 
     } //updatePosition
@@ -230,7 +231,7 @@ public class SnakeGame extends Game {
  */
     public boolean isAppleEaten() {
         if (((Math.abs(s.get(0).getX() - apple.getX()) <= 50)) &&
-            (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
+        (Math.abs(s.get(0).getY() - apple.getY()) <= 50)) {
             apple.changeLocation();
             return true;
         } else {
@@ -286,12 +287,14 @@ public class SnakeGame extends Game {
      * Checks if snake runs into itself.
      */
     public void checkSelfCollision () {
-        for (int i = 1; i < s.size(); i++) {
-            if (s.get(0).getX() == s.get(i).getX() && s.get(0).getY() == s.get(i).getY()) {
-                System.out.println("collided with self, Game over!");
-                gameOver();
-            }
-        } //for
+        if (s.size() > 3) {
+            for (int i = 3; i < s.size(); i++) {
+                if (s.get(0).getX() == s.get(i).getX() && s.get(0).getY() == s.get(i).getY()) {
+                    System.out.println("collided with self, Game over!");
+                    gameOver();
+                }
+            } //for
+        }
     } //checkSelfCollision
 
     /**
@@ -312,8 +315,6 @@ public class SnakeGame extends Game {
                 iterator.remove();
             }
         }
-
-
 
         this.headX = 100;
         this.headY = 100;
